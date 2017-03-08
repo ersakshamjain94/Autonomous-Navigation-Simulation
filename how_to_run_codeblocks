@@ -1,0 +1,9 @@
+codeblocks
+
+go to settings compiler linker then in linker options add the following
+-lsfml-graphics -lsfml-window -lsfml-system
+
+for command line 
+g++ -c main.cpp
+then 
+g++ main.o -o -lsfml-graphics -lsfml-window -lsfml-system
