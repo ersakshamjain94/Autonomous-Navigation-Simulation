@@ -1,6 +1,7 @@
 //warnings
 //always refer to field position with pos_circle variable a field is nothing but field of view of the car
 // once you are done with training, close the gui window with upper right cross botton otherwise training data wont be saved
+//it is assumed that user wont rotate more than 180 degrees
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include<math.h>
@@ -374,26 +375,29 @@ while(window.isOpen())
             {   //displayRecord(r);
 
                     if(event.key.code==sf::Keyboard::Right)
-                    {
-                        float rot=number_of_right_rotations*rotation; //calculate relative angle 'rotation' is just one step of rotation
+                    {   //scaling between -1 to 1
+                        double rot=number_of_right_rotations*rotation; //calculate relative angle 'rotation' is just one step of rotation
                         cout<<"\ntotal rotation took place is->" <<rot;
-                        rot=rot/720.0;
-                        rot=rot+0.5; //making sure rot value lies between 0.5 - 1 denoting clockwise rotation
+                        rot=(2*(rot-(-180.0f))/360.0)-1; //feature scaling
+                        //rot=rot+0.5; //making sure rot value lies between 0.5 - 1 denoting clockwise rotation
                         if(flag==1) //flag is only set when we start calculating number of rotation sets once relative angle is calculated deactivate it
                         {   cout<<"\nflagrotate deactivated";
                             r->rotations=rot;
                             flag=0;
                             number_of_right_rotations=0;
                         }
+                        cout<<"\nrot->"<<rot;
                         cout<<"New angle is set and it is->"<<car.getRotation()<<endl;
 
                     }
                     if(event.key.code==sf::Keyboard::Left)
                     {
-
-                        float rot=number_of_left_rotations*rotation;
+                    //scaling into range http://stackoverflow.com/questions/5294955/how-to-scale-down-a-range-of-numbers-with-a-known-min-and-max-value
+                    //range -1 to 1
+                        double rot=-1*(number_of_left_rotations*rotation);
                         cout<<"\ntotal rotation took place is->" <<rot;
-                        rot=rot/720.0;
+                        rot=(2*(rot-(-180.0f))/360.0)-1;
+                        cout<<"\nrot->"<<rot;
                          //making sure rot value lies between 0 - 0.5 denoting clockwise rotation
 
                         if(flag==1)

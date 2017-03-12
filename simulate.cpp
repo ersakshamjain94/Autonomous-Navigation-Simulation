@@ -89,20 +89,13 @@ void collisionDetected(sf::SoundBuffer buffer)
 struct record * rotateVehicle(sf::CircleShape & car,sf::CircleShape & field,fann_type * output,struct record * r)
 {
         double rotation_angle=output[0];
-        if(rotation_angle>0.5)
-        {
-            rotation_angle-=0.5;
-            rotation_angle*=720.0f;
+            rotation_angle+=1.0f;
+            rotation_angle/=2.0f;
+            rotation_angle*=360.0f;
+            rotation_angle-=180.0f;
             cout<<"final angle calculated is->"<<rotation_angle<<endl;
             car.rotate(rotation_angle);
-        }
-        else
-        {
-            rotation_angle*=720.0f;
-            cout<<"final angle calculated is->-"<<rotation_angle<<endl;
-            car.rotate(-rotation_angle);
 
-        }
         r->left=placeholder;
         r->right=placeholder;
 
@@ -331,7 +324,7 @@ int main()
 while(window.isOpen())
 {   sf::Time t;
     t.asMilliseconds();
-    t=sf::microseconds(1000000);
+    t=sf::microseconds(100000);
     sf::sleep(t);
     sf::Vector2u windowSize=window.getSize();
     sf::FloatRect windowRect=sf::Rect<float>(0,0,windowSize.y,windowSize.x); //get the bounds of the window
