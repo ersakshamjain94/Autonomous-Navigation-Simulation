@@ -93,11 +93,13 @@ struct record * rotateVehicle(sf::CircleShape & car,sf::CircleShape & field,fann
         {
             rotation_angle-=0.5;
             rotation_angle*=720.0f;
+            cout<<"final angle calculated is->"<<rotation_angle<<endl;
             car.rotate(rotation_angle);
         }
         else
         {
             rotation_angle*=720.0f;
+            cout<<"final angle calculated is->-"<<rotation_angle<<endl;
             car.rotate(-rotation_angle);
 
         }
@@ -107,7 +109,7 @@ struct record * rotateVehicle(sf::CircleShape & car,sf::CircleShape & field,fann
 
 }
 struct record * moveUpBack(sf::CircleShape & car,sf::CircleShape & field,struct record * r,sf::CircleShape obstacle[],int num_obstacles,sf::Vector2f fieldPosition,float radius,struct fann * ann,sf::FloatRect windowRect)
-{
+{ //backup function if its called, car continuously moves in forward direction
 
 float  x = step*(float)sin((M_PI / 180.0f) * (car.getRotation()));
     float   y = step*(float)cos((M_PI / 180.0f) * (car.getRotation()));
@@ -121,9 +123,9 @@ float  x = step*(float)sin((M_PI / 180.0f) * (car.getRotation()));
 
 }
 struct record * moveUp(sf::CircleShape & car,sf::CircleShape & field,struct record * r,sf::CircleShape obstacle[],int num_obstacles,sf::Vector2f fieldPosition,float radius,struct fann * ann,sf::FloatRect windowRect)
-{
-    sf::FloatRect carRect=car.getGlobalBounds();
-    if(!carRect.intersects(windowRect))
+{ //function used to move the car in forward direction
+    sf::FloatRect fieldRect=car.getGlobalBounds();
+    if(!fieldRect.intersects(windowRect))
     {
         car.rotate(rand()%359);
         float  x = step*(float)sin((M_PI / 180.0f) * (car.getRotation()));
@@ -236,7 +238,11 @@ else
     fann_type input[2];
     input[0]=r->left;
     input[1]=r->right; //setting up inputs for neural network
+    cout<<"inputting the following to neural network->"<<endl;
+    cout<<r->left<<" "<<r->right<<endl;
     calc_out=fann_run(ann,input);
+    cout<<"neural network gave following output->";
+    cout<<calc_out[0]<<endl;
     r=rotateVehicle(car,field,calc_out,r);
     float  x = step*(float)sin((M_PI / 180.0f) * (car.getRotation()));
     float  y = step*(float)cos((M_PI / 180.0f) * (car.getRotation()));
@@ -323,15 +329,19 @@ int main()
      int flag=0;
      int flagMove=0;
 while(window.isOpen())
-{    sf::Vector2u windowSize=window.getSize();
-    sf::FloatRect windowRect=sf::Rect<float>(0,0,windowSize.y,windowSize.x);
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(windowSize.x-30,windowSize.y-60));
+{   sf::Time t;
+    t.asMilliseconds();
+    t=sf::microseconds(1000000);
+    sf::sleep(t);
+    sf::Vector2u windowSize=window.getSize();
+    sf::FloatRect windowRect=sf::Rect<float>(0,0,windowSize.y,windowSize.x); //get the bounds of the window
+    sf::RectangleShape rect; //shows a rectangle overing the window
+    rect.setSize(sf::Vector2f(windowSize.x-5,windowSize.y-5));
     rect.setFillColor(sf::Color::Transparent);
-    rect.setOutlineColor(sf::Color::Transparent);
+    rect.setOutlineColor(sf::Color::Red);
     rect.setOutlineThickness(3);
     rect.setOrigin(0,0);
-    rect.setPosition(10,10);
+    rect.setPosition(0,0);
 
     window.clear(sf::Color::Black); //sets background color
 
@@ -354,9 +364,9 @@ while(window.isOpen())
         window.draw(&v, 1, sf::Points);
     }
     sf::Vertex carPosvertex(car.getPosition());
-   // sf::Vertex fieldPosvertex(pos_circle);
+    sf::Vertex fieldPosvertex(pos_circle);
     window.draw(&carPosvertex,1,sf::Points);
-  //  window.draw(&fieldPosvertex,1,sf::Points);
+    window.draw(&fieldPosvertex,1,sf::Points);
     window.draw(rect);
     window.display();
     sf::Event event;

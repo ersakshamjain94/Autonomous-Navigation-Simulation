@@ -69,6 +69,9 @@ Neural network architecture->
 	angle=angle-0.5;  
 	angle=angle*720;  
 	else if angle is <=0.5 it should rotate by an amount angle= angle*720;  
-
+########################################################################################
+1.Run the program, open both windows simultaneously, keep a watch on console  
+2. press up key and rotate key freely if you see no object in proximity , as soon as you see an object in proximity, dont press up or down button , keep right or left button pressed in order to set rotation angle and then only release
+3. once rotation angle is set, record will be written to data.txt
 Any suggestions and feedbacks are welcomed.  
 
